@@ -34,16 +34,19 @@ define("port", default=8888, help="run on the given port", type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
+        # 路由
         handlers = [
             (r"/", MainHandler),
             (r"/chatsocket", ChatSocketHandler),
         ]
+        # 设置
         settings = dict(
             cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
-            xsrf_cookies=True,
+            xsrf_cookies=True,  # 跨域
         )
+        # 继承父类方法
         super(Application, self).__init__(handlers, **settings)
 
 
@@ -69,12 +72,14 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 
     @classmethod
     def update_cache(cls, chat):
+        """更新缓存"""
         cls.cache.append(chat)
         if len(cls.cache) > cls.cache_size:
             cls.cache = cls.cache[-cls.cache_size:]
 
     @classmethod
     def send_updates(cls, chat):
+        """发送更新数据"""
         logging.info("sending message to %d waiters", len(cls.waiters))
         for waiter in cls.waiters:
             try:
