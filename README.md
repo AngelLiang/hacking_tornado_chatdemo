@@ -11,3 +11,8 @@ pip3 install -r .\requirements.txt
 python3 .\chatdemo.py
 ```
 
+访问`http://127.0.0.1:8888/`
+
+# 效果图
+
+![index](screenshot/index.png)
